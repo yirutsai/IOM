@@ -53,34 +53,34 @@ def upload():
         ser.write('C'.encode('utf-8'))
         
     if(com3.status =="off" or com3.functioning =="FALSE"):
-        ser.write('d'.encode('utf-8'))
-    elif(com3.status =="on" and com3.functioning =="TRUE"):
-        ser.write('D'.encode('utf-8'))
-        
-    if(com4.status =="off" or com4.functioning =="FALSE"):
-        ser.write('e'.encode('utf-8'))
-    elif(com4.status =="on" and com4.functioning =="TRUE"):
-        ser.write('E'.encode('utf-8'))
-        
-    if(com5.status =="off" or com5.functioning =="FALSE"):
-        ser.write('f'.encode('utf-8'))
-    elif(com5.status =="on" and com5.functioning =="TRUE"):
-        ser.write('F'.encode('utf-8'))
-        
-    if(com6.status =="off" or com6.functioning =="FALSE"):
         ser.write('g'.encode('utf-8'))
-    elif(com6.status =="on" and com6.functioning =="TRUE"):
+    elif(com3.status =="on" and com3.functioning =="TRUE"):
         ser.write('G'.encode('utf-8'))
         
-    if(com7.status =="off" or com7.functioning =="FALSE"):
+    if(com4.status =="off" or com4.functioning =="FALSE"):
         ser.write('h'.encode('utf-8'))
-    elif(com7.status =="on" and com7.functioning =="TRUE"):
+    elif(com4.status =="on" and com4.functioning =="TRUE"):
         ser.write('H'.encode('utf-8'))
         
-    if(com8.status =="off" or com8.functioning =="FALSE"):
+    if(com5.status =="off" or com5.functioning =="FALSE"):
         ser.write('i'.encode('utf-8'))
-    elif(com8.status =="on" and com8.functioning =="TRUE"):
+    elif(com5.status =="on" and com5.functioning =="TRUE"):
         ser.write('I'.encode('utf-8'))
+        
+    if(com6.status =="off" or com6.functioning =="FALSE"):
+        ser.write('j'.encode('utf-8'))
+    elif(com6.status =="on" and com6.functioning =="TRUE"):
+        ser.write('J'.encode('utf-8'))
+        
+    if(com7.status =="off" or com7.functioning =="FALSE"):
+        ser.write('k'.encode('utf-8'))
+    elif(com7.status =="on" and com7.functioning =="TRUE"):
+        ser.write('K'.encode('utf-8'))
+        
+    if(com8.status =="off" or com8.functioning =="FALSE"):
+        ser.write('l'.encode('utf-8'))
+    elif(com8.status =="on" and com8.functioning =="TRUE"):
+        ser.write('L'.encode('utf-8'))
 
 
 
@@ -89,14 +89,14 @@ def upload():
 
 
 
-ser =serial.Serial("COM4",9600,timeout=2) #arduino連線
+ser =serial.Serial("COM3",9600,timeout=2) #arduino連線
 
 scope=['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 credentials = SAC.from_json_keyfile_name('gSpread1-6ab7029a757a.json', scope) #認證
 url2 = 'https://script.google.com/macros/s/AKfycbwPTqTSLMHR-qn0s09OF4EP__Nv_WwokFR66kyKeTMnxbfM750/exec'
 
 gc=gspread.authorize(credentials) #連線google sheet
-clock = pygame.time.Clock()
+
 com3 = machine("com3")
 com4 = machine("com4")
 com5 = machine("com5")
@@ -107,9 +107,14 @@ universal = machine("universal")
 blake = machine("blake")
 odin = machine("odin")
 machine_List =[com3,com4,com5,com6,com7,com8,universal,blake,odin]
-
+ct =0
 while True:
     refreshDATA()
     upload()
+    while ser.in_waiting:
+        mcu_feedback = ser.readline().decode()  # 接收回應訊息並解碼
+        print('控制板回應：', mcu_feedback)
+    print("ct":ct)
     sleep(5)
+    ct+=1
 
