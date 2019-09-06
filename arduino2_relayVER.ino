@@ -14,7 +14,10 @@ int relay9=10;
 int relay10=11;
 int relay11=12;
 int relay12=13;
-
+//如果未來需要增加機台
+//就上面變數多一個
+//下面判斷式也多一個傳輸的字元
+//那個部分要與py配合好就OK
 
 void setup() {
 
