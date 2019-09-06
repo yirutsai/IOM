@@ -23,6 +23,9 @@ void setup() {
   for(int i=2;i<=13;i++){
     pinMode(i,OUTPUT);
   }
+  for(int i=30;i<=32;i++){
+    pinMode(i,OUTPUT);
+  }
 }
 void loop() {
   if(Serial.available()>0){
