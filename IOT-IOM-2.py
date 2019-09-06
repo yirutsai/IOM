@@ -22,7 +22,7 @@ class machine():
 
 
 def refreshDATA():
-    wks = gc.open('永齡').get_worksheet(0)
+    wks = gc.open('機聯網').get_worksheet(0)
     for i in range(len(machine_List)-3):                        #檢查3D印表機的狀態
         machine_List[i].status =wks.cell(5+i,4).value
         machine_List[i].functioning =wks.cell(5+i,3).value
@@ -83,13 +83,10 @@ def upload():
         ser.write('L'.encode('utf-8'))
 
 
-
-
-
-
-
-
-ser =serial.Serial("COM3",9600,timeout=2) #arduino連線
+ser =serial.Serial("COM6",9600,timeout=2) #arduino連線
+#注意
+#如果這邊跑error通常是因為COM會因為不同電腦而不同
+#可以檢查一下arduino那邊是哪個序列埠
 
 scope=['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 credentials = SAC.from_json_keyfile_name('gSpread1-6ab7029a757a.json', scope) #認證
