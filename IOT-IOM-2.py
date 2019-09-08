@@ -80,7 +80,7 @@ def upload():
         ser.write('L'.encode('utf-8'))
 
 
-ser =serial.Serial("COM3",9600,timeout=2) #arduino連線
+ser =serial.Serial("COM6",9600,timeout=2) #arduino連線
 
 scope=['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 credentials = SAC.from_json_keyfile_name('gSpread1-6ab7029a757a.json', scope) #認證
