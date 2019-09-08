@@ -20,17 +20,19 @@ class machine():
         print(self.status)
 
 
-
 def refreshDATA():
-    wks = gc.open('機聯網').get_worksheet(0)
+    wks = gc.open('機聯網').get_worksheet(1)
+    temp = wks.cell(1,26).value.split('-')
+    print(temp)
     for i in range(len(machine_List)-3):                        #檢查3D印表機的狀態
-        machine_List[i].status =wks.cell(5+i,1).value
-    universal.status = wks.cell(2,1).value           #檢查universal的狀態
+        machine_List[i].status =temp[3+i]
+    universal.status = temp[0]           #檢查universal的狀態
     
-    blake.status = wks.cell(3,1).value                 #檢查beambox的狀態
-    odin.status = wks.cell(4,1).value
-
+    blake.status = temp[1]                 #檢查beambox的狀態
+    odin.status = temp[2]
     upload()
+
+
 
 
 def upload():
@@ -38,7 +40,7 @@ def upload():
         ser.write('a'.encode('utf-8'))
     elif(universal.status =="on"):
         ser.write('A'.encode('utf-8'))
-        
+    
     if(blake.status =="off"):
         ser.write('b'.encode('utf-8'))
     elif(blake.status =="on"):
@@ -50,44 +52,56 @@ def upload():
         ser.write('C'.encode('utf-8'))
         
     if(com3.status =="off"):
-        ser.write('g'.encode('utf-8'))
-    elif(com3.status =="on"):
-        ser.write('G'.encode('utf-8'))
-        
-    if(com4.status =="off"):
-        ser.write('h'.encode('utf-8'))
-    elif(com4.status =="on"):
-        ser.write('H'.encode('utf-8'))
-        
-    if(com5.status =="off"):
-        ser.write('i'.encode('utf-8'))
-    elif(com5.status =="on"):
-        ser.write('I'.encode('utf-8'))
-        
-    if(com6.status =="off"):
         ser.write('j'.encode('utf-8'))
-    elif(com6.status =="on"):
+    elif(com3.status =="on"):
         ser.write('J'.encode('utf-8'))
         
-    if(com7.status =="off"):
+    if(com4.status =="off"):
         ser.write('k'.encode('utf-8'))
-    elif(com7.status =="on"):
+    elif(com4.status =="on"):
         ser.write('K'.encode('utf-8'))
         
-    if(com8.status =="off"):
+    if(com5.status =="off"):
         ser.write('l'.encode('utf-8'))
-    elif(com8.status =="on"):
+    elif(com5.status =="on"):
         ser.write('L'.encode('utf-8'))
+        
+    if(com6.status =="off"):
+        ser.write('g'.encode('utf-8'))
+    elif(com6.status =="on"):
+        ser.write('G'.encode('utf-8'))
+        
+    if(com7.status =="off"):
+        ser.write('h'.encode('utf-8'))
+    elif(com7.status =="on"):
+        ser.write('H'.encode('utf-8'))
+        
+    if(com8.status =="off"):
+        ser.write('i'.encode('utf-8'))
+    elif(com8.status =="on"):
+        ser.write('I'.encode('utf-8'))
 
 
-ser =serial.Serial("COM6",9600,timeout=2) #arduino連線
 
+
+def connect():
+    global gc
+    try:
+        gc=gspread.authorize(credentials) #連線google sheet
+        print("connect sus")
+    except:
+        print("connecting...")
+        sleep(5)
+        connect()
+
+
+ser =serial.Serial("COM3",9600,timeout=2) #arduino連線
 scope=['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 credentials = SAC.from_json_keyfile_name('gSpread1-6ab7029a757a.json', scope) #認證
 url2 = 'https://script.google.com/macros/s/AKfycbwPTqTSLMHR-qn0s09OF4EP__Nv_WwokFR66kyKeTMnxbfM750/exec'
 
-gc=gspread.authorize(credentials) #連線google sheet
 
+connect()
 com3 = machine("com3")
 com4 = machine("com4")
 com5 = machine("com5")
@@ -102,11 +116,10 @@ ct =0
 ser.write('DEFMNO'.encode('utf-8'))
 while True:
     refreshDATA()
-    upload()
     while ser.in_waiting:
         mcu_feedback = ser.readline().decode()  # 接收回應訊息並解碼
         print('控制板回應：', mcu_feedback)
     print("ct:",ct)
-    sleep(14)
+    sleep(5)
     ct+=1
 
