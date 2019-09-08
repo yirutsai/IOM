@@ -107,6 +107,6 @@ while True:
         mcu_feedback = ser.readline().decode()  # 接收回應訊息並解碼
         print('控制板回應：', mcu_feedback)
     print("ct:",ct)
-    sleep(10)
+    sleep(13.5)
     ct+=1
 
